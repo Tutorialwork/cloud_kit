@@ -1,8 +1,8 @@
 name: cloud_kit
-description: A new Flutter plugin.
-version: 0.0.1
-author:
-homepage:
+description: Flutter plugin to use CloudKit in your iOS app.
+version: 1.0.0
+author: Tutorialwork
+homepage: https://github.com/Tutorialwork/cloud_kit
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
