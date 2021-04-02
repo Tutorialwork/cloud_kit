@@ -1,7 +1,6 @@
 name: cloud_kit
 description: Flutter plugin to use CloudKit in your iOS app.
 version: 1.0.0
-author: Tutorialwork
 homepage: https://github.com/Tutorialwork/cloud_kit
 
 environment:
