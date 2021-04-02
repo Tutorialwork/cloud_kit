@@ -1,0 +1,22 @@
+PODS:
+  - cloud_kit (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - cloud_kit (from `.symlinks/plugins/cloud_kit/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  cloud_kit:
+    :path: ".symlinks/plugins/cloud_kit/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  cloud_kit: 09580108aedda41b646dd12c1610f8b45d08e3ee
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.10.1
