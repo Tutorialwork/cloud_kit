@@ -1,10 +1,10 @@
-# CloudKit
-
-This Flutter plugin is a brige to use in your Flutter app CloudKit.
-
 <div align="center">
     <img src="https://raw.githubusercontent.com/Tutorialwork/cloud_kit/main/images/logo.png" height="200">
 </div>
+
+# CloudKit
+
+This Flutter plugin is a brige to use in your Flutter app CloudKit.
 
 # 📝 Usage
 
