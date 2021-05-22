@@ -24,8 +24,9 @@ class CloudKit {
       return false;
     }
 
-    bool status = await _channel.invokeMethod(
-        'save', {"key": key, "value": value, "containerId": _containerId}) ?? false;
+    bool status = await _channel.invokeMethod('save',
+            {"key": key, "value": value, "containerId": _containerId}) ??
+        false;
 
     return status;
   }
@@ -43,7 +44,8 @@ class CloudKit {
     }
 
     List<dynamic> records = await (_channel
-        .invokeMethod('get', {"key": key, "containerId": _containerId}) as FutureOr<List<dynamic>>);
+            .invokeMethod('get', {"key": key, "containerId": _containerId})
+        as FutureOr<List<dynamic>>);
 
     if (records.length != 0) {
       return records[0];
