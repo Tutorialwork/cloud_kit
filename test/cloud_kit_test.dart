@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_kit/cloud_kit.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('cloud_kit');
@@ -17,7 +16,4 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await CloudKit.platformVersion, '42');
-  });
 }
