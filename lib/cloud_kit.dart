@@ -5,8 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class CloudKit {
-  static const MethodChannel _channel =
-      const MethodChannel('cloud_kit');
+  static const MethodChannel _channel = const MethodChannel('cloud_kit');
 
   String _containerId;
 
@@ -26,13 +25,7 @@ class CloudKit {
     }
 
     bool status = await _channel.invokeMethod(
-        'save',
-        {
-          "key": key,
-          "value": value,
-          "containerId": _containerId
-        }
-    );
+        'save', {"key": key, "value": value, "containerId": _containerId});
 
     return status;
   }
@@ -47,13 +40,8 @@ class CloudKit {
       throw new FlutterError("Key not given but required");
     }
 
-    List<dynamic> records = await _channel.invokeMethod(
-        'get',
-        {
-          "key": key,
-          "containerId": _containerId
-        }
-    );
+    List<dynamic> records = await _channel
+        .invokeMethod('get', {"key": key, "containerId": _containerId});
 
     if (records.length != 0) {
       return records[0];
@@ -72,13 +60,8 @@ class CloudKit {
       throw new FlutterError("Key not given but required");
     }
 
-    await _channel.invokeMethod(
-        'delete',
-        {
-          "key": key,
-          "containerId": _containerId
-        }
-    );
+    await _channel
+        .invokeMethod('delete', {"key": key, "containerId": _containerId});
   }
 
   /// Deletes the entire user database.
@@ -87,11 +70,6 @@ class CloudKit {
       return;
     }
 
-    await _channel.invokeMethod(
-        'deleteAll',
-        {
-          "containerId": _containerId
-        }
-    );
+    await _channel.invokeMethod('deleteAll', {"containerId": _containerId});
   }
 }
