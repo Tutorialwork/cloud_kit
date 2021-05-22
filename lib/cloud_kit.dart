@@ -45,7 +45,7 @@ class CloudKit {
 
     List<dynamic> records = await (_channel
             .invokeMethod('get', {"key": key, "containerId": _containerId})
-        as FutureOr<List<dynamic>>);
+    );
 
     if (records.length != 0) {
       return records[0];

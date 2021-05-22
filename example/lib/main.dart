@@ -34,7 +34,14 @@ class _MyAppState extends State<MyApp> {
                 decoration: InputDecoration(hintText: 'Value'),
               ),
               ElevatedButton(
-                onPressed: () => cloudKit.save(key.text, value.text),
+                onPressed: () async {
+                  bool success = await cloudKit.save(key.text, value.text);
+                  if (success) {
+                    print('Successfully saved key ' + key.text);
+                  } else {
+                    print('Failed to save key: ' + key.text);
+                  }
+                },
                 child: Text('Save'),
               ),
               ElevatedButton(
