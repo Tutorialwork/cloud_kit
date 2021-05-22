@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -15,6 +14,8 @@ class CloudKit {
     _containerId = containerIdentifier;
   }
 
+  /// Save a new entry to CloudKit using a key and value.
+  /// The key need to be unique.
   Future<bool> save(String key, String value) async {
     if (!Platform.isIOS) {
       return false;
@@ -36,6 +37,7 @@ class CloudKit {
     return status;
   }
 
+  /// Loads a value from CloudKit by key.
   Future<String> get(String key) async {
     if (!Platform.isIOS) {
       return null;
@@ -60,6 +62,7 @@ class CloudKit {
     }
   }
 
+  /// Delete a entry from CloudKit using the key.
   Future<void> delete(String key) async {
     if (!Platform.isIOS) {
       return;
@@ -78,6 +81,7 @@ class CloudKit {
     );
   }
 
+  /// Deletes the entire user database.
   Future<void> clearDatabase() async {
     if (!Platform.isIOS) {
       return;
