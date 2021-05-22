@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class CloudKit {
   static const MethodChannel _channel = const MethodChannel('cloud_kit');
 
-  String _containerId;
+  String _containerId = '';
 
   CloudKit(String containerIdentifier) {
     _containerId = containerIdentifier;
@@ -15,33 +14,36 @@ class CloudKit {
 
   /// Save a new entry to CloudKit using a key and value.
   /// The key need to be unique.
+  /// Returns a boolean [bool] with true if the save was successfully.
   Future<bool> save(String key, String value) async {
     if (!Platform.isIOS) {
       return false;
     }
 
-    if (key == null || value == null || key.length == 0 || value.length == 0) {
-      throw new FlutterError("Key or value not given but required");
+    if (key.length == 0 || value.length == 0) {
+      return false;
     }
 
     bool status = await _channel.invokeMethod(
-        'save', {"key": key, "value": value, "containerId": _containerId});
+        'save', {"key": key, "value": value, "containerId": _containerId}) ?? false;
 
     return status;
   }
 
   /// Loads a value from CloudKit by key.
-  Future<String> get(String key) async {
+  /// Returns a string [string] with the saved value.
+  /// This can be null if the key was not found.
+  Future<String?> get(String key) async {
     if (!Platform.isIOS) {
       return null;
     }
 
-    if (key == null || key.length == 0) {
-      throw new FlutterError("Key not given but required");
+    if (key.length == 0) {
+      return null;
     }
 
-    List<dynamic> records = await _channel
-        .invokeMethod('get', {"key": key, "containerId": _containerId});
+    List<dynamic> records = await (_channel
+        .invokeMethod('get', {"key": key, "containerId": _containerId}) as FutureOr<List<dynamic>>);
 
     if (records.length != 0) {
       return records[0];
@@ -56,8 +58,8 @@ class CloudKit {
       return;
     }
 
-    if (key == null || key.length == 0) {
-      throw new FlutterError("Key not given but required");
+    if (key.length == 0) {
+      return;
     }
 
     await _channel
