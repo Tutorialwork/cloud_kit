@@ -1,5 +1,5 @@
 name: cloud_kit
-description: Flutter plugin to use CloudKit in your iOS app.
+description: CloudKit can sync settings over multiple iOS devices without extra sign in.
 version: 1.0.0
 homepage: https://github.com/Tutorialwork/cloud_kit
 
