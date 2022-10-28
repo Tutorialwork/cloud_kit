@@ -11,6 +11,15 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
+    case "check":
+        if FileManager.default.ubiquityIdentityToken != nil {
+            print("iCloud Available")
+            result(true)
+        } else {
+            print("iCloud Unavailable")
+            result(false)
+        }
+        
     case "save":
         
         if let arguments = call.arguments as? Dictionary<String, Any>,

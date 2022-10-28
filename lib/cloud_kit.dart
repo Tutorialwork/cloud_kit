@@ -12,6 +12,15 @@ class CloudKit {
     _containerId = containerIdentifier;
   }
 
+  Future<bool> check() async {
+    if (!Platform.isIOS) {
+      return false;
+    }
+
+    bool status = await _channel.invokeMethod('check', {}) ?? false;
+    return status;
+  }
+
   /// Save a new entry to CloudKit using a key and value.
   /// The key need to be unique.
   /// Returns a boolean [bool] with true if the save was successfully.

@@ -35,6 +35,14 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  final isAvailable = await cloudKit.check();
+                  print(isAvailable);
+                  setState(() {});
+                },
+                child: Text('Check iCloud'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
                   bool success = await cloudKit.save(key.text, value.text);
                   if (success) {
                     print('Successfully saved key ' + key.text);
