@@ -31,6 +31,20 @@ class CloudKit {
     return status;
   }
 
+  Future<List<String>> getKeys() async {
+    if (!Platform.isIOS) {
+      return [];
+    }
+
+    try {
+      List<dynamic> records = await (_channel
+          .invokeMethod('getKeys', {"containerId": _containerId}));
+      return records.map((e) => e.toString()).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   /// Loads a value from CloudKit by key.
   /// Returns a string [string] with the saved value.
   /// This can be null if the key was not found.

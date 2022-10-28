@@ -46,6 +46,14 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  final keys = await cloudKit.getKeys();
+                  print(keys);
+                  setState(() {});
+                },
+                child: Text('Get Keys'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
                   value.text = await cloudKit.get(key.text);
 
                   setState(() {});

@@ -46,6 +46,29 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             result(FlutterError.init(code: "Error", message: "Cannot pass key and value parameter", details: nil))
          }
         
+    case "getKeys":
+        if let arguments = call.arguments as? Dictionary<String, Any>,
+           let containerId = arguments["containerId"] as? String {
+            
+            let database = CKContainer(identifier: containerId).privateCloudDatabase
+
+           
+            let query = CKQuery(recordType: "StorageItem", predicate: NSPredicate(value: true))
+            
+            database.perform(query, inZoneWith: nil) { (records, error) in
+
+                var keys:[String] = []
+                for record in records ?? [] {
+                    keys.append(contentsOf: record.allKeys())
+                }
+                result(keys)
+
+            }
+            
+         } else {
+            result(FlutterError.init(code: "Error", message: "Cannot pass key and value parameter", details: nil))
+         }
+
     case "get":
         
         if let arguments = call.arguments as? Dictionary<String, Any>,
