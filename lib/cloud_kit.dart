@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CloudKit {
   static const MethodChannel _channel = const MethodChannel('cloud_kit');
 
   String _containerId = '';
+  String _recordType = '';
+  static const String _defaultRecordType = 'default';
 
-  CloudKit(String containerIdentifier) {
+  CloudKit(String containerIdentifier, {String recordType = 'self'}) {
     _containerId = containerIdentifier;
+    _recordType = recordType;
   }
 
   Future<bool> check() async {
@@ -33,11 +37,53 @@ class CloudKit {
       return false;
     }
 
-    bool status = await _channel.invokeMethod('save',
-            {"key": key, "value": value, "containerId": _containerId}) ??
+    bool status = await _channel.invokeMethod('save', {
+          "key": key,
+          "value": value,
+          "containerId": _containerId,
+          "recordType": _recordType
+        }) ??
         false;
 
     return status;
+  }
+
+  Future<bool> saveRecord(String data,
+      {String withRecordType = _defaultRecordType}) async {
+    if (!Platform.isIOS) {
+      return false;
+    }
+    final recordType = _recordType != '' ? _recordType : withRecordType;
+
+    bool status = await _channel.invokeMethod('save', {
+          "data": data,
+          "containerId": _containerId,
+          "recordType": recordType
+        }) ??
+        false;
+
+    return status;
+  }
+
+  Future<List<Map<String, String>>> getRecords(
+      {String withRecordType = _defaultRecordType}) async {
+    if (!Platform.isIOS) {
+      return [];
+    }
+    final recordType = _recordType != '' ? _recordType : withRecordType;
+
+    List<Map<String, String>> records = await _channel.invokeMethod(
+            'getRecords',
+            {"containerId": _containerId, "recordType": recordType}) ??
+        [];
+    return records;
+  }
+
+  Future<void> deleteRecord(String key,
+      {String withRecordType = _defaultRecordType}) {
+    final recordType = _recordType != '' ? _recordType : withRecordType;
+    return _channel.invokeMethod('deleteRecord',
+        {"containerId": _containerId, "recordType": recordType, "key": key});
   }
 
   Future<List<String>> getKeys() async {
@@ -46,8 +92,8 @@ class CloudKit {
     }
 
     try {
-      List<dynamic> records = await (_channel
-          .invokeMethod('getKeys', {"containerId": _containerId}));
+      List<dynamic> records = await (_channel.invokeMethod(
+          'getKeys', {"containerId": _containerId, "recordType": _recordType}));
       return records.map((e) => e.toString()).toList();
     } catch (e) {
       return [];
@@ -66,8 +112,8 @@ class CloudKit {
       return null;
     }
 
-    List<dynamic> records = await (_channel
-        .invokeMethod('get', {"key": key, "containerId": _containerId}));
+    List<dynamic> records = await (_channel.invokeMethod('get',
+        {"key": key, "containerId": _containerId, "recordType": _recordType}));
 
     if (records.length != 0) {
       return records[0];
@@ -86,8 +132,8 @@ class CloudKit {
       return;
     }
 
-    await _channel
-        .invokeMethod('delete', {"key": key, "containerId": _containerId});
+    await _channel.invokeMethod('delete',
+        {"key": key, "containerId": _containerId, "recordType": _recordType});
   }
 
   /// Deletes the entire user database.

@@ -25,11 +25,12 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
         if let arguments = call.arguments as? Dictionary<String, Any>,
            let key = arguments["key"] as? String,
            let value = arguments["value"] as? String,
-           let containerId = arguments["containerId"] as? String {
+           let containerId = arguments["containerId"] as? String,
+           let recordType = arguments["recordType"] as? String {
             
             let database = CKContainer(identifier: containerId).privateCloudDatabase
 
-            let query = CKQuery(recordType: "StorageItem", predicate: NSPredicate(value: true))
+            let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil) { (records, error) in
 
@@ -41,7 +42,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
         
             }
                         
-            let record = CKRecord(recordType: "StorageItem")
+            let record = CKRecord(recordType: recordType)
             record.setValue(value, forKey: key)
             
             database.save(record) { (record, error) in
@@ -54,6 +55,50 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
          } else {
             result(FlutterError.init(code: "Error", message: "Cannot pass key and value parameter", details: nil))
          }
+    
+    case "saveRecord":
+        
+        if let arguments = call.arguments as? Dictionary<String, Any>,
+           let data = arguments["data"] as? Dictionary<String,String>,
+           let containerId = arguments["containerId"] as? String,
+           let recordType = arguments["recordType"] as? String {
+            let database = CKContainer(identifier: containerId).privateCloudDatabase
+            let record = CKRecord(recordType: recordType)
+            
+            record.setValuesForKeys(data)
+            
+            database.save(record) { record, error in
+                if record != nil, error == nil {
+                    result(true)
+                } else {
+                    result(false)
+                }
+            }
+        }else {
+            result(FlutterError.init(code: "Error", message: "Cannot pass parameters", details: nil))
+         }
+        
+    case "getRecords":
+        
+        if let arguments = call.arguments as? Dictionary<String, Any>,
+           let containerId = arguments["containerId"] as? String,
+           let recordType = arguments["recordType"] as? String {
+            let database = CKContainer(identifier: containerId).privateCloudDatabase
+            let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+            
+            database.perform(query, inZoneWith: nil){ (records, error) in
+                let queryResult: [Dictionary<String, String>] = (records?.compactMap { record in  ["key": record.value(forKey: "key") as! String, "data": record.value(forKey: "data") as! String] }) ?? []
+                if queryResult.count > 0 {
+                    result(queryResult)
+                }else {
+                    result(FlutterError.init(code: "Error", message: "DB Data error", details: nil))
+                }
+            }
+            
+        }else {
+            result(FlutterError.init(code: "Error", message: "Cannot pass parameters", details: nil))
+         }
+        
         
     case "getKeys":
         if let arguments = call.arguments as? Dictionary<String, Any>,
@@ -101,6 +146,39 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             result(FlutterError.init(code: "Error", message: "Cannot pass key and value parameter", details: nil))
          }
         
+    case "deleteRecord":
+        
+        if let arguments = call.arguments as? Dictionary<String, Any>,
+           let key = arguments["key"] as? String,
+           let containerId = arguments["containerId"] as? String,
+           let recordType = arguments["recordType"] as? String {
+            
+            let database = CKContainer(identifier: containerId).privateCloudDatabase
+
+           
+            let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+            
+            database.perform(query, inZoneWith: nil) { (records, error) in
+                
+                records?.forEach({ (record) in
+                    
+                    if record.value(forKey: "key") as! String == key {
+                        database.delete(withRecordID: record.recordID) { (recordId, error) in
+                            
+                        }
+                        
+                    }
+                    
+                    
+                })
+                
+                
+            }
+            
+         } else {
+            result(FlutterError.init(code: "Error", message: "Cannot pass key and value parameter", details: nil))
+         }
+        
     case "delete":
         
         if let arguments = call.arguments as? Dictionary<String, Any>,
@@ -136,11 +214,12 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
     case "deleteAll":
         
         if let arguments = call.arguments as? Dictionary<String, Any>,
-           let containerId = arguments["containerId"] as? String {
+           let containerId = arguments["containerId"] as? String,
+           let recordType = arguments["recordType"] as? String {
             
             let database = CKContainer(identifier: containerId).privateCloudDatabase
            
-            let query = CKQuery(recordType: "StorageItem", predicate: NSPredicate(value: true))
+            let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil) { (records, error) in
                 
