@@ -87,10 +87,14 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil){ (records, error) in
-                let queryResult: [Dictionary<String, String>] = (records?.compactMap { record in  ["key": record.value(forKey: "key") as! String, "data": record.value(forKey: "data") as! String] }) ?? []
+                let queryResult: [Dictionary<String, String>] = (records?.compactMap { record in
+                    if let key = record.value(forKey: "key") as? String, let data = record.value(forKey: "data") as? String {
+                        ["key": key, "data": data]
+                    }
+                }) ?? []
                 if queryResult.count > 0 {
                     result(queryResult)
-                }else {
+                } else {
                     result(FlutterError.init(code: "Error", message: "DB Data error", details: nil))
                 }
             }
