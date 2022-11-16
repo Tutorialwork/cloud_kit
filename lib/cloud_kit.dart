@@ -49,7 +49,7 @@ class CloudKit {
     return status;
   }
 
-  Future<bool> saveRecord(String data,
+  Future<bool> saveRecord(Map<String, String> data,
       {String withRecordType = _defaultRecordType}) async {
     if (!Platform.isIOS) {
       return false;
