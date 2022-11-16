@@ -56,7 +56,7 @@ class CloudKit {
     }
     final recordType = _recordType != '' ? _recordType : withRecordType;
 
-    bool status = await _channel.invokeMethod('save', {
+    bool status = await _channel.invokeMethod('saveRecord', {
           "data": data,
           "containerId": _containerId,
           "recordType": recordType
