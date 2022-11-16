@@ -11,7 +11,8 @@ class CloudKit {
   String _recordType = '';
   static const String _defaultRecordType = 'default';
 
-  CloudKit(String containerIdentifier, {String recordType = 'self'}) {
+  CloudKit(String containerIdentifier,
+      {String recordType = _defaultRecordType}) {
     _containerId = containerIdentifier;
     _recordType = recordType;
   }
