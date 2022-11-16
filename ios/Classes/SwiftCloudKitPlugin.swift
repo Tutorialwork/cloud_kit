@@ -94,10 +94,13 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
                         return nil
                     }
                 } ?? []
-                if queryResult.count > 0 {
+                
                     result(queryResult)
-                } else {
-                    result(FlutterError.init(code: "Error", message: "DB Data error", details: nil))
+                
+                if((error) != nil){
+                    
+                    result(FlutterError.init(code: "Error", message: "DB Data Error", details: error))
+                    
                 }
             }
             
