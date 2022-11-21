@@ -88,8 +88,8 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             
             database.perform(query, inZoneWith: nil){ (records, error) in
                 let queryResult: [Dictionary<String, String>] = records?.compactMap { record in
-                    if let key = record.value(forKey: "key") as? String, let data = record.value(forKey: "data") as? String {
-                      return ["key": key, "data": data]
+                    if let key = record.value(forKey: "key") as? String, let data = record.value(forKey: "data") as? String, let name = record.value(forKey: "name") as? String {
+                        return ["key": key, "data": data, "name": name]
                     }else {
                         return nil
                     }

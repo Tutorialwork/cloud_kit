@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CloudKit {
@@ -23,6 +22,7 @@ class CloudKit {
     }
 
     bool status = await _channel.invokeMethod('check', {}) ?? false;
+
     return status;
   }
 
@@ -50,41 +50,41 @@ class CloudKit {
   }
 
   Future<bool> saveRecord(Map<String, String> data,
-      {String withRecordType = _defaultRecordType}) async {
+      {String? withRecordType}) async {
     if (!Platform.isIOS) {
       return false;
     }
-    final recordType = _recordType != '' ? _recordType : withRecordType;
 
     bool status = await _channel.invokeMethod('saveRecord', {
           "data": data,
           "containerId": _containerId,
-          "recordType": recordType
+          "recordType": withRecordType ?? _recordType
         }) ??
         false;
 
     return status;
   }
 
-  Future<List<Map<String, String>>> getRecords(
-      {String withRecordType = _defaultRecordType}) async {
+  Future<List<Map<String, String>>> getRecords({String? withRecordType}) async {
     if (!Platform.isIOS) {
       return [];
     }
-    final recordType = _recordType != '' ? _recordType : withRecordType;
 
-    List<Map<String, String>> records = await _channel.invokeMethod(
-            'getRecords',
-            {"containerId": _containerId, "recordType": recordType}) ??
+    List<Map<String, String>> records = await _channel
+            .invokeMethod<List<Map<String, String>>>('getRecords', {
+          "containerId": _containerId,
+          "recordType": withRecordType ?? _recordType
+        }) ??
         [];
     return records;
   }
 
-  Future<void> deleteRecord(String key,
-      {String withRecordType = _defaultRecordType}) {
-    final recordType = _recordType != '' ? _recordType : withRecordType;
-    return _channel.invokeMethod('deleteRecord',
-        {"containerId": _containerId, "recordType": recordType, "key": key});
+  Future<void> deleteRecord(String key, {String? withRecordType}) {
+    return _channel.invokeMethod('deleteRecord', {
+      "containerId": _containerId,
+      "recordType": withRecordType ?? _recordType,
+      "key": key
+    });
   }
 
   Future<List<String>> getKeys() async {
