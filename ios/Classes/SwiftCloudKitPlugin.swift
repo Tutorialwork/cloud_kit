@@ -87,7 +87,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil){ (records, error) in
-                let queryResult: [Dictionary<String, String>] = records?.compactMap { record in
+                let queryResult: Array<Dictionary<String, String>> = records?.compactMap { record in
                     if let key = record.value(forKey: "key") as? String, let data = record.value(forKey: "data") as? String, let name = record.value(forKey: "name") as? String {
                         return ["key": key, "data": data, "name": name]
                     }else {

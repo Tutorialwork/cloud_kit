@@ -65,13 +65,12 @@ class CloudKit {
     return status;
   }
 
-  Future<List<Map<String, String>>> getRecords({String? withRecordType}) async {
+  Future<List> getRecords({String? withRecordType}) async {
     if (!Platform.isIOS) {
       return [];
     }
 
-    List<Map<String, String>> records = await _channel
-            .invokeMethod<List<Map<String, String>>>('getRecords', {
+    List records = await _channel.invokeMethod<List>('getRecords', {
           "containerId": _containerId,
           "recordType": withRecordType ?? _recordType
         }) ??
