@@ -25,15 +25,26 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
            let containerId = arguments["containerId"] as? String,
            let recordType = arguments["recordType"] as? String {
             let database = CKContainer(identifier: containerId).privateCloudDatabase
-            let record = CKRecord(recordType: recordType)
+            let query = CKQuery(recordType: recordType, predicate: NSPredicate(format: "key == \(data["key"] ?? "default")"))
             
-            record.setValuesForKeys(data)
-            
-            database.save(record) { record, error in
-                if record != nil, error == nil {
-                    result(true)
-                } else {
-                    result(FlutterError.init(code: "Error", message: "Error while saving record see details", details: error))
+            database.perform(query, inZoneWith: nil){(records, error) in
+                if(error != nil){
+                    result(FlutterError.init(code: "Error", message: "Error while querying existing records", details: error))
+                }
+                let record: CKRecord
+                if(records?.count != 0 && records?.first != nil){
+                    record = (records?.first)!
+                    record.setValuesForKeys(data)
+                }else {
+                    record = CKRecord(recordType: recordType)
+                    record.setValuesForKeys(data)
+                }
+                database.save(record) { record, error in
+                    if record != nil, error == nil {
+                        result(true)
+                    } else {
+                        result(FlutterError.init(code: "Error", message: "Error while saving record see details", details: error))
+                    }
                 }
             }
         }else {
