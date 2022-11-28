@@ -25,7 +25,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
            let containerId = arguments["containerId"] as? String,
            let recordType = arguments["recordType"] as? String {
             let database = CKContainer(identifier: containerId).privateCloudDatabase
-            let query = CKQuery(recordType: recordType, predicate: NSPredicate(format: "key == \(data["key"] ?? "default")"))
+            let query = CKQuery(recordType: recordType, predicate: NSPredicate(format: "key == \"\(data["key"] ?? "default")\""))
             
             database.perform(query, inZoneWith: nil){(records, error) in
                 if(error != nil){
