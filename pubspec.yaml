@@ -1,6 +1,6 @@
 name: cloud_kit
 description: CloudKit can sync settings over multiple iOS devices without extra sign in.
-version: 1.1.1
+version: 1.1.2
 homepage: https://github.com/Tutorialwork/cloud_kit
 
 environment:
