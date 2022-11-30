@@ -67,19 +67,15 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
                         return nil
                     }
                 } ?? []
-                
+                if error == nil {
                     result(queryResult)
-                
-                if((error) != nil){
-                    
-                    result(FlutterError.init(code: "Error", message: "DB Data Error", details: error))
-                    
+                } else {
+                    result(FlutterError.init(code: "Error", message: "DB Data Error", details: nil))
                 }
             }
-            
-        }else {
+        } else {
             result(FlutterError.init(code: "Error", message: "Cannot pass parameters", details: nil))
-         }
+        }
         
         
     case "deleteRecord":
