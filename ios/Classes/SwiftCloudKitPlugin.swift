@@ -12,12 +12,25 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "check":
-        if FileManager.default.ubiquityIdentityToken != nil {
-            result(true)
-        } else {
-            result(FlutterError.init(code: "Error", message: "iCloud not available or not authenticated", details: nil))
-        }
-        
+            CKContainer.default().accountStatus { (accountStatus, error) in
+                if(error != nil){
+                    result(FlutterError.init(code: "Error", message: error.debugDescription, details: nil))
+                }
+                switch accountStatus {
+                case .available:
+                    result(true)
+                case .noAccount:
+                    result(FlutterError.init(code: "Error", message: "No iCloud account", details: nil))
+                case .restricted:
+                    result(FlutterError.init(code: "Error", message: "iCloud restricted", details: nil))
+                case .temporarilyUnavailable:
+                    result(FlutterError.init(code: "Error", message: "iCloud temporarily unavailable", details: nil))
+                case .couldNotDetermine:
+                    result(FlutterError.init(code: "Error", message: "Unable to determine iCloud status", details: nil))
+                @unknown default:
+                    result(FlutterError.init(code: "Error", message: "defaul case from switch unknown error", details: nil))
+                }
+            }
     case "saveRecord":
         
         if let arguments = call.arguments as? Dictionary<String, Any>,
