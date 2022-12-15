@@ -73,6 +73,9 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil){ (records, error) in
+            if(error != nil){
+                    result(FlutterError.init(code: "Error", message: "Error while querying existing records", details: error))
+                }
                 let queryResult: Array<Dictionary<String, String>> = records?.compactMap { record in
                     if let key = record.value(forKey: "key") as? String, let data = record.value(forKey: "data") as? String, let name = record.value(forKey: "name") as? String {
                         return ["key": key, "data": data, "name": name]
@@ -80,11 +83,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
                         return nil
                     }
                 } ?? []
-                if error == nil {
                     result(queryResult)
-                } else {
-                    result(FlutterError.init(code: "Error", message: "DB Data Error", details: nil))
-                }
             }
         } else {
             result(FlutterError.init(code: "Error", message: "Cannot pass parameters", details: nil))
@@ -104,7 +103,11 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil) { (records, error) in
-                
+                if((error) != nil){
+                                
+                                result(FlutterError.init(code: "Error", message: "DB delete error see details", details: error))
+                                
+                            }
                 records?.forEach({ (record) in
                     
                     if record.value(forKey: "key") as! String == key {
@@ -140,7 +143,11 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
             let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
             
             database.perform(query, inZoneWith: nil) { (records, error) in
-                
+                 if((error) != nil){
+                            
+                            result(FlutterError.init(code: "Error", message: "DB delete all error see details", details: error))
+                            
+                        }
                 records?.forEach({ (record) in
                 
                     database.delete(withRecordID: record.recordID) { (recordId, error) in
