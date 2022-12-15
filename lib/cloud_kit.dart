@@ -69,12 +69,17 @@ class CloudKit {
     if (!Platform.isIOS) {
       return [];
     }
+    List records;
+    try {
+      records = await _channel.invokeMethod<List>('getRecords', {
+            "containerId": _containerId,
+            "recordType": withRecordType ?? _recordType
+          }) ??
+          [];
+    } catch (e) {
+      throw Exception(e);
+    }
 
-    List records = await _channel.invokeMethod<List>('getRecords', {
-          "containerId": _containerId,
-          "recordType": withRecordType ?? _recordType
-        }) ??
-        [];
     return records;
   }
 
