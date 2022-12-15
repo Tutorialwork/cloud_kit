@@ -123,9 +123,6 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
                     
                     
                 })
-                
-                
-            }
             
          } else {
             result(FlutterError.init(code: "Error", message: "Cannot pass key and value parameter", details: nil))
