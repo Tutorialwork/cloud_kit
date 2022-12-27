@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () => cloudKit.clearDatabase(),
                 child: Text('Clear Database'),
-              )
+              ),
             ],
           )),
     );
