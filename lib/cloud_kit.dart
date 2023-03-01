@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -21,9 +23,10 @@ class CloudKit {
       return false;
     }
 
-    bool status = await _channel.invokeMethod('check', {}) ?? false;
+    final response =
+        SwiftResponse.fromMap(await _channel.invokeMethod('check', {}));
 
-    return status;
+    return response.success;
   }
 
   /// Save a new entry to CloudKit using a key and value.
@@ -38,15 +41,14 @@ class CloudKit {
       return false;
     }
 
-    bool status = await _channel.invokeMethod('save', {
-          "key": key,
-          "value": value,
-          "containerId": _containerId,
-          "recordType": _recordType
-        }) ??
-        false;
+    final response = SwiftResponse.fromMap(await _channel.invokeMethod('save', {
+      "key": key,
+      "value": value,
+      "containerId": _containerId,
+      "recordType": _recordType
+    }));
 
-    return status;
+    return response.success;
   }
 
   Future<bool> saveRecord(Map<String, String> data,
@@ -55,32 +57,34 @@ class CloudKit {
       return false;
     }
 
-    bool status = await _channel.invokeMethod('saveRecord', {
-          "data": data,
-          "containerId": _containerId,
-          "recordType": withRecordType ?? _recordType
-        }) ??
-        false;
-
-    return status;
+    final response =
+        SwiftResponse.fromMap(await _channel.invokeMethod('saveRecord', {
+      "data": data,
+      "containerId": _containerId,
+      "recordType": withRecordType ?? _recordType
+    }));
+    return response.success;
   }
 
   Future<List> getRecords({String? withRecordType}) async {
     if (!Platform.isIOS) {
       return [];
     }
-    List records;
     try {
-      records = await _channel.invokeMethod<List>('getRecords', {
-            "containerId": _containerId,
-            "recordType": withRecordType ?? _recordType
-          }) ??
-          [];
+      final response = SwiftResponse.fromMap(await _channel.invokeMethod(
+          'getRecords', {
+        "containerId": _containerId,
+        "recordType": withRecordType ?? _recordType
+      }));
+      if (response.success) {
+        final records = response.data as List<dynamic>;
+        return records.map((e) => e.toString()).toList();
+      } else {
+        return [];
+      }
     } catch (e) {
       throw Exception(e);
     }
-
-    return records;
   }
 
   Future<void> deleteRecord(String key, {String? withRecordType}) {
@@ -97,9 +101,15 @@ class CloudKit {
     }
 
     try {
-      List<dynamic> records = await (_channel.invokeMethod(
-          'getKeys', {"containerId": _containerId, "recordType": _recordType}));
-      return records.map((e) => e.toString()).toList();
+      final response = SwiftResponse.fromMap(await (_channel.invokeMethod(
+          'getKeys',
+          {"containerId": _containerId, "recordType": _recordType})));
+      if (response.success) {
+        final records = response.data as List<dynamic>;
+        return records.map((e) => e.toString()).toList();
+      } else {
+        return [];
+      }
     } catch (e) {
       return [];
     }
@@ -117,11 +127,15 @@ class CloudKit {
       return null;
     }
 
-    List<dynamic> records = await (_channel.invokeMethod('get',
-        {"key": key, "containerId": _containerId, "recordType": _recordType}));
+    final response = SwiftResponse.fromMap(await (_channel.invokeMethod('get',
+        {"key": key, "containerId": _containerId, "recordType": _recordType})));
 
-    if (records.length != 0) {
-      return records[0];
+    if (response.success) {
+      final data = response.data as List<dynamic>;
+      if (data.isNotEmpty) {
+        return response.data[0];
+      }
+      return null;
     } else {
       return null;
     }
@@ -149,4 +163,33 @@ class CloudKit {
 
     await _channel.invokeMethod('deleteAll', {"containerId": _containerId});
   }
+}
+
+class SwiftResponse {
+  bool success;
+  String? error;
+  dynamic data;
+
+  SwiftResponse(this.success, this.error, this.data);
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'success': success,
+      'error': error,
+      'data': data,
+    };
+  }
+
+  factory SwiftResponse.fromMap(Map<String, dynamic> map) {
+    return SwiftResponse(
+      map['success'] as bool,
+      map['error'] != null ? map['error'] as String : null,
+      map['data'] as dynamic,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SwiftResponse.fromJson(String source) =>
+      SwiftResponse.fromMap(json.decode(source) as Map<String, dynamic>);
 }
