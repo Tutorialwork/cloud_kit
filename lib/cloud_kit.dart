@@ -32,18 +32,19 @@ class CloudKit {
   /// Save a new entry to CloudKit using a key and value.
   /// The key need to be unique.
   /// Returns a boolean [bool] with true if the save was successfully.
-  Future<bool> save(String key, String value) async {
+  Future<bool> save(String key, String value, String version) async {
     if (!Platform.isIOS) {
       return false;
     }
 
-    if (key.length == 0 || value.length == 0) {
+    if (key.length == 0 || value.length == 0 || version.length == 0) {
       return false;
     }
 
     final response = SwiftResponse.fromMap(await _channel.invokeMethod('save', {
       "key": key,
       "value": value,
+      "version": version,
       "containerId": _containerId,
       "recordType": _recordType
     }));
