@@ -239,9 +239,9 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
 
         database.save(record) { (record, error) in
           if record != nil, error == nil {
-            result(CloudKitResponse(success: true, error: nil, data: nil).toDictionary(
+            result(CloudKitResponse(success: true, error: nil, data: nil).toDictionary())
           } else {
-            result(CloudKitResponse(success: false, error: "Cannot save record", data: nil).toDictionary(
+            result(CloudKitResponse(success: false, error: "Cannot save record", data: nil).toDictionary())
           }
         }
       } else {
@@ -263,7 +263,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
           for record in records ?? [] {
             keys.append(contentsOf: record.allKeys())
           }
-          result(CloudKitResponse(success: true, error: nil, data: keys).toDictionary()
+          result(CloudKitResponse(success: true, error: nil, data: keys).toDictionary())
 
         }
 
@@ -286,7 +286,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
 
           let foundRecords = records?.compactMap({ $0.value(forKey: key) as? String })
 
-          result(CloudKitResponse(success: true, error: nil, data: foundRecords).toDictionary(
+          result(CloudKitResponse(success: true, error: nil, data: foundRecords).toDictionary())
 
         }
 
