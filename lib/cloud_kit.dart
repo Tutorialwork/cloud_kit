@@ -23,8 +23,10 @@ class CloudKit {
       return false;
     }
 
-    final response =
-        SwiftResponse.fromMap(await _channel.invokeMethod('check', {}));
+    final map =
+        Map<String, dynamic>.from(await _channel.invokeMethod('check', {}));
+
+    final response = SwiftResponse.fromMap(map);
 
     return response.success;
   }
@@ -41,13 +43,15 @@ class CloudKit {
       return false;
     }
 
-    final response = SwiftResponse.fromMap(await _channel.invokeMethod('save', {
+    final map = Map<String, dynamic>.from(await _channel.invokeMethod('save', {
       "key": key,
       "value": value,
       "version": version,
       "containerId": _containerId,
       "recordType": _recordType
     }));
+
+    final response = SwiftResponse.fromMap(map);
 
     return response.success;
   }
@@ -58,12 +62,14 @@ class CloudKit {
       return false;
     }
 
-    final response =
-        SwiftResponse.fromMap(await _channel.invokeMethod('saveRecord', {
+    final map =
+        Map<String, dynamic>.from(await _channel.invokeMethod('saveRecord', {
       "data": data,
       "containerId": _containerId,
       "recordType": withRecordType ?? _recordType
     }));
+
+    final response = SwiftResponse.fromMap(map);
     return response.success;
   }
 
@@ -72,11 +78,13 @@ class CloudKit {
       return [];
     }
     try {
-      final response = SwiftResponse.fromMap(await _channel.invokeMethod(
+      final map = Map<String, dynamic>.from(await _channel.invokeMethod(
           'getRecords', {
         "containerId": _containerId,
         "recordType": withRecordType ?? _recordType
       }));
+
+      final response = SwiftResponse.fromMap(map);
       if (response.success) {
         final records = response.data as List<dynamic>;
         return records.map((e) => e.toString()).toList();
@@ -102,9 +110,10 @@ class CloudKit {
     }
 
     try {
-      final response = SwiftResponse.fromMap(await (_channel.invokeMethod(
+      final map = Map<String, dynamic>.from(await (_channel.invokeMethod(
           'getKeys',
           {"containerId": _containerId, "recordType": _recordType})));
+      final response = SwiftResponse.fromMap(map);
       if (response.success) {
         final records = response.data as List<dynamic>;
         return records.map((e) => e.toString()).toList();
@@ -128,8 +137,9 @@ class CloudKit {
       return null;
     }
 
-    final response = SwiftResponse.fromMap(await (_channel.invokeMethod('get',
+    final map = Map<String, dynamic>.from(await (_channel.invokeMethod('get',
         {"key": key, "containerId": _containerId, "recordType": _recordType})));
+    final response = SwiftResponse.fromMap(map);
 
     if (response.success) {
       final data = response.data as List<dynamic>;
