@@ -213,7 +213,6 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
       if let arguments = call.arguments as? [String: Any],
         let key = arguments["key"] as? String,
         let value = arguments["value"] as? String,
-        let version = arguments["version"] as? String,
         let containerId = arguments["containerId"] as? String,
         let recordType = arguments["recordType"] as? String
       {

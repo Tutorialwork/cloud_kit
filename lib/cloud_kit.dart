@@ -87,7 +87,7 @@ class CloudKit {
       final response = SwiftResponse.fromMap(map);
       if (response.success) {
         final records = response.data as List<dynamic>;
-        return records.map((e) => e.toString()).toList();
+        return records.map((e) => jsonEncode(e)).toList();
       } else {
         return [];
       }
