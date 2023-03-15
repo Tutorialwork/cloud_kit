@@ -28,6 +28,10 @@ class CloudKit {
 
     final response = SwiftResponse.fromMap(map);
 
+    if (!response.success) {
+      throw Exception(response.error);
+    }
+
     return response.success;
   }
 

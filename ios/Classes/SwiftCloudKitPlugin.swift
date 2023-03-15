@@ -23,22 +23,22 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
           result(CloudKitResponse(success: true, error: nil, data: nil).toDictionary())
         case .noAccount:
           result(
-            CloudKitResponse(success: false, error: "No iCloud account", data: nil).toDictionary())
+            CloudKitResponse(success: false, error: "noAccount", data: nil).toDictionary())
         case .restricted:
           result(
-            CloudKitResponse(success: false, error: "iCloud restricted", data: nil).toDictionary())
+            CloudKitResponse(success: false, error: "restricted", data: nil).toDictionary())
         case .temporarilyUnavailable:
           result(
-            CloudKitResponse(success: false, error: "iCloud temporarily unavailable", data: nil)
+            CloudKitResponse(success: false, error: "temporarilyUnavailable", data: nil)
               .toDictionary())
         case .couldNotDetermine:
           result(
-            CloudKitResponse(success: false, error: "Unable to determine iCloud status", data: nil)
+            CloudKitResponse(success: false, error: "couldNotDetermine", data: nil)
               .toDictionary())
         @unknown default:
           result(
             CloudKitResponse(
-              success: false, error: "default case from switch unknown error", data: nil
+              success: false, error: "default", data: nil
             ).toDictionary())
         }
       }
