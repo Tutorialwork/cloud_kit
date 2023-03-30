@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+/// A Wrapper for CloudKit
 class CloudKit {
   static const MethodChannel _channel = const MethodChannel('cloud_kit');
 
@@ -54,25 +55,29 @@ class CloudKit {
   }
 
   /// Delete a entry from CloudKit using the key.
-  Future<void> delete(String key) async {
+  Future<bool> delete(String key) async {
     if (!Platform.isIOS) {
-      return;
+      return false;
     }
 
     if (key.length == 0) {
-      return;
+      return false;
     }
 
-    await _channel
-        .invokeMethod('delete', {"key": key, "containerId": _containerId});
+    bool success = await _channel
+        .invokeMethod('delete', {"key": key, "containerId": _containerId,}) ?? false;
+
+    return success;
   }
 
   /// Deletes the entire user database.
-  Future<void> clearDatabase() async {
+  Future<bool> clearDatabase() async {
     if (!Platform.isIOS) {
-      return;
+      return false;
     }
 
-    await _channel.invokeMethod('deleteAll', {"containerId": _containerId});
+    bool success = await _channel.invokeMethod('deleteAll', {"containerId": _containerId}) ?? false;
+
+    return success;
   }
 }

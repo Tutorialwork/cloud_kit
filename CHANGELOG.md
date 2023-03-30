@@ -1,3 +1,6 @@
+## 1.1.1
+* Make delete and delete all swift code callback to flutter
+
 ## 1.1.0
 
 * Add null safety support
