@@ -1,5 +1,5 @@
 ## 1.1.1
-Make delete and delete all swift code callback to flutter
+* Make delete and delete all swift code callback to flutter
 
 ## 1.1.0
 
