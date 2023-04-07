@@ -25,7 +25,7 @@ class CloudKit {
       return false;
     }
 
-    bool status = await _channel.invokeMethod('save',
+    bool status = await _channel.invokeMethod('SAVE_VALUE',
             {"key": key, "value": value, "containerId": _containerId}) ??
         false;
 
@@ -45,7 +45,7 @@ class CloudKit {
     }
 
     List<dynamic> records = await (_channel
-        .invokeMethod('get', {"key": key, "containerId": _containerId}));
+        .invokeMethod('GET_VALUE', {"key": key, "containerId": _containerId}));
 
     if (records.length != 0) {
       return records[0];
@@ -65,7 +65,7 @@ class CloudKit {
     }
 
     bool success = await _channel
-        .invokeMethod('delete', {"key": key, "containerId": _containerId,}) ?? false;
+        .invokeMethod('DELETE_VALUE', {"key": key, "containerId": _containerId,}) ?? false;
 
     return success;
   }
@@ -76,7 +76,7 @@ class CloudKit {
       return false;
     }
 
-    bool success = await _channel.invokeMethod('deleteAll', {"containerId": _containerId}) ?? false;
+    bool success = await _channel.invokeMethod('DELETE_ALL', {"containerId": _containerId}) ?? false;
 
     return success;
   }
