@@ -1,3 +1,7 @@
+## 1.2.0
+* Added new getAccountStatus() method to check if the user is logged in
+* Adapted README
+
 ## 1.1.1
 * Make delete and delete all swift code callback to flutter
 
