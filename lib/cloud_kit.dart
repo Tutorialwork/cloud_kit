@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+import 'types/CloudKitAccountStatus.dart';
+export 'types/CloudKitAccountStatus.dart';
+
 /// A Wrapper for CloudKit
 class CloudKit {
   static const MethodChannel _channel = const MethodChannel('cloud_kit');
@@ -84,5 +87,19 @@ class CloudKit {
         false;
 
     return success;
+  }
+
+  /// Gets the iCloud account status
+  /// This is useful to check first if the user is logged in
+  /// and then trying to save data to the users iCloud
+  Future<CloudKitAccountStatus> getAccountStatus() async {
+    if (!Platform.isIOS) {
+      return CloudKitAccountStatus.notSupported;
+    }
+
+    int accountStatus = await _channel
+        .invokeMethod('GET_ACCOUNT_STATUS', {"containerId": _containerId});
+
+    return CloudKitAccountStatus.values[accountStatus];
   }
 }

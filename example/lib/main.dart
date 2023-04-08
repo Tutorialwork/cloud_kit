@@ -15,6 +15,7 @@ class _MyAppState extends State<MyApp> {
   TextEditingController key = TextEditingController();
   TextEditingController value = TextEditingController();
   CloudKit cloudKit = CloudKit("iCloud.dev.tutorialwork.cloudkitExample");
+  CloudKitAccountStatus? accountStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  value.text = await cloudKit.get(key.text);
+                  value.text = await cloudKit.get(key.text) ?? '';
 
                   setState(() {});
                 },
@@ -59,7 +60,17 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () => cloudKit.clearDatabase(),
                 child: Text('Clear Database'),
-              )
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  accountStatus = await cloudKit.getAccountStatus();
+                  setState(() {
+
+                  });
+                },
+                child: Text('Get account status'),
+              ),
+              (accountStatus != null) ? Text('Current account status: ${accountStatus}', textAlign: TextAlign.center,) : Container()
             ],
           )),
     );
