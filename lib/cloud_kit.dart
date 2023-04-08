@@ -64,8 +64,11 @@ class CloudKit {
       return false;
     }
 
-    bool success = await _channel
-        .invokeMethod('DELETE_VALUE', {"key": key, "containerId": _containerId,}) ?? false;
+    bool success = await _channel.invokeMethod('DELETE_VALUE', {
+          "key": key,
+          "containerId": _containerId,
+        }) ??
+        false;
 
     return success;
   }
@@ -76,7 +79,9 @@ class CloudKit {
       return false;
     }
 
-    bool success = await _channel.invokeMethod('DELETE_ALL', {"containerId": _containerId}) ?? false;
+    bool success = await _channel
+            .invokeMethod('DELETE_ALL', {"containerId": _containerId}) ??
+        false;
 
     return success;
   }
