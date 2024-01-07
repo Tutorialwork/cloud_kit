@@ -16,6 +16,7 @@ class _MyAppState extends State<MyApp> {
   TextEditingController value = TextEditingController();
   CloudKit cloudKit = CloudKit("iCloud.dev.tutorialwork.cloudkitExample");
   CloudKitAccountStatus? accountStatus;
+  List<Record> records = [];
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,39 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: Text('Get account status'),
               ),
-              (accountStatus != null) ? Text('Current account status: ${accountStatus}', textAlign: TextAlign.center,) : Container()
+              (accountStatus != null) ? Text('Current account status: ${accountStatus}', textAlign: TextAlign.center,) : Container(),
+              ElevatedButton(
+                onPressed: () => cloudKit.saveRecord("User", {
+                  "username": "Tutorialwork",
+                  "password": "****"
+                }),
+                child: Text('Save Record'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  List<Record> records = await cloudKit.getRecords("User");
+
+                  setState(() {
+                    this.records = records;
+                  });
+                },
+                child: Text('Get records'),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: records.length,
+                  itemBuilder: (context, index) {
+                    Record record = records[index];
+                    return Column(
+                      children: [
+                        Text("User Record", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(record.getValueForKey("username") ?? "Username unknown"),
+                        Text(record.getValueForKey("password") ?? "Password unknown")
+                      ],
+                    );
+                  },
+                ),
+              )
             ],
           )),
     );

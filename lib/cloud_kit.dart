@@ -1,10 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
 
 import 'types/CloudKitAccountStatus.dart';
+import 'types/record.dart';
+import 'types/record_entry.dart';
+
 export 'types/CloudKitAccountStatus.dart';
+export 'types/record.dart';
+export 'types/record_entry.dart';
 
 /// A Wrapper for CloudKit
 class CloudKit {
@@ -101,5 +107,52 @@ class CloudKit {
         .invokeMethod('GET_ACCOUNT_STATUS', {"containerId": _containerId});
 
     return CloudKitAccountStatus.values[accountStatus];
+  }
+
+  Future<bool> saveRecord(String name, Map<String, dynamic> values) async {
+    if (!Platform.isIOS) {
+      return false;
+    }
+
+    if (name.length == 0 || values.length == 0) {
+      return false;
+    }
+
+    bool status = await _channel.invokeMethod('SAVE_RECORD',
+        {"recordName": name, "values": values, "containerId": _containerId}) ??
+        false;
+
+    return status;
+  }
+
+  Future<List<Record>> getRecords(String name) async {
+    if (!Platform.isIOS) {
+      return [];
+    }
+
+    if (name.length == 0) {
+      return [];
+    }
+
+    String recordsJson = await (_channel
+        .invokeMethod('GET_RECORDS', {"recordName": name, "containerId": _containerId}));
+
+    List<Record> recordsList = [];
+    List<dynamic> records = jsonDecode(recordsJson);
+
+    records.forEach((dynamic recordData) {
+      List<MapEntry<Object?, Object?>> resultList = recordData["data"].entries.toList();
+      List<RecordEntry> recordEntries = [];
+
+      resultList.forEach((MapEntry<Object?, Object?> entry) {
+        RecordEntry recordEntry = new RecordEntry(entry.key as String, entry.value as String);
+        recordEntries.add(recordEntry);
+      });
+
+      Record record = new Record(recordData["recordId"], recordData["recordType"], DateTime.parse(recordData["creationDate"]), DateTime.parse(recordData["modificationDate"]), recordData["modifiedByDevice"], recordEntries);
+      recordsList.add(record);
+    });
+
+    return recordsList;
   }
 }
