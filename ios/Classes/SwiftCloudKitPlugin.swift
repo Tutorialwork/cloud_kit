@@ -20,6 +20,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
       SaveRecordHandler().handle(command: call.method, arguments: callArguments, result: result)
       GetRecordsHandler().handle(command: call.method, arguments: callArguments, result: result)
       DeleteRecordHandler().handle(command: call.method, arguments: callArguments, result: result)
+      UpdateRecordHandler().handle(command: call.method, arguments: callArguments, result: result)
   }
 
 }

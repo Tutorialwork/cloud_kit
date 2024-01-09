@@ -165,4 +165,19 @@ class CloudKit {
 
     return status;
   }
+
+  Future<bool> updateRecord(Record updatedRecord) async {
+    if (!Platform.isIOS) {
+      return false;
+    }
+
+    Map<String, dynamic> valuesMap = new Map();
+    updatedRecord.recordEntries.forEach((RecordEntry recordEntry) {
+      valuesMap.putIfAbsent(recordEntry.key, () => recordEntry.value);
+    });
+
+    bool status = await _channel.invokeMethod('UPDATE_RECORD', {"containerId": _containerId, "recordId": updatedRecord.recordId, "values": valuesMap});
+
+    return status;
+  }
 }

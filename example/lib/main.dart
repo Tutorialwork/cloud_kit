@@ -105,6 +105,9 @@ class _MyAppState extends State<MyApp> {
                           ],
                         ),
                         ElevatedButton(
+                            onPressed: () => _updateRecord(records[index]),
+                            child: Icon(Icons.edit)),
+                        ElevatedButton(
                             onPressed: () => _deleteRecord(records[index]),
                             child: Icon(Icons.delete)),
                       ],
@@ -120,5 +123,11 @@ class _MyAppState extends State<MyApp> {
   Future<void> _deleteRecord(Record record) async {
     bool status = await cloudKit.deleteRecord(record);
     print("Record was deleted with success status: $status");
+  }
+
+  Future<void> _updateRecord(Record record) async {
+    record.setValueForKey("password", "test");
+    bool status = await cloudKit.updateRecord(record);
+    print("Updated record with success status: $status");
   }
 }
