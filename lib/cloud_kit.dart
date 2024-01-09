@@ -155,4 +155,14 @@ class CloudKit {
 
     return recordsList;
   }
+
+  Future<bool> deleteRecord(Record record) async {
+    if (!Platform.isIOS) {
+      return false;
+    }
+
+    bool status = await _channel.invokeMethod('DELETE_RECORD', {"recordId": record.recordId, "containerId": _containerId});
+
+    return status;
+  }
 }

@@ -94,11 +94,19 @@ class _MyAppState extends State<MyApp> {
                   itemCount: records.length,
                   itemBuilder: (context, index) {
                     Record record = records[index];
-                    return Column(
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("User Record", style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(record.getValueForKey("username") ?? "Username unknown"),
-                        Text(record.getValueForKey("password") ?? "Password unknown")
+                        Column(
+                          children: [
+                            Text("User Record", style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text(record.getValueForKey("username") ?? "Username unknown"),
+                            Text(record.getValueForKey("password") ?? "Password unknown")
+                          ],
+                        ),
+                        ElevatedButton(
+                            onPressed: () => _deleteRecord(records[index]),
+                            child: Icon(Icons.delete)),
                       ],
                     );
                   },
@@ -107,5 +115,10 @@ class _MyAppState extends State<MyApp> {
             ],
           )),
     );
+  }
+
+  Future<void> _deleteRecord(Record record) async {
+    bool status = await cloudKit.deleteRecord(record);
+    print("Record was deleted with success status: $status");
   }
 }
