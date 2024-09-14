@@ -16,6 +16,7 @@ class _MyAppState extends State<MyApp> {
   TextEditingController value = TextEditingController();
   CloudKit cloudKit = CloudKit("iCloud.dev.tutorialwork.cloudkitExample");
   CloudKitAccountStatus? accountStatus;
+  Map<String, String>? allKeysAndValues;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +71,30 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: Text('Get account status'),
               ),
-              (accountStatus != null) ? Text('Current account status: ${accountStatus}', textAlign: TextAlign.center,) : Container()
+              (accountStatus != null) ? Text('Current account status: \n ${accountStatus}', textAlign: TextAlign.center,) : Container(),
+              ElevatedButton(
+                onPressed: () async {
+                  allKeysAndValues = await cloudKit.getAll();
+                  setState(() {
+
+                  });
+                },
+                child: Text('Get all keys and values'),
+              ),
+              (allKeysAndValues != null) ? Text('All saved keys and values: \n ${_getKeysAndValuesAsString(allKeysAndValues)}', textAlign: TextAlign.center,) : Container()
             ],
           )),
     );
+  }
+
+  String _getKeysAndValuesAsString(Map<String, String>? keysAndValues) {
+    if (keysAndValues == null) {
+      return "";
+    }
+    String result = "";
+    keysAndValues.forEach((key, value) {
+      result += key + " = " + value + "\n";
+    });
+    return result;
   }
 }

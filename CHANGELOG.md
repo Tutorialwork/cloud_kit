@@ -1,3 +1,6 @@
+## 1.3.0
+* Added new getAll() method to fetch all saved key value pairs
+
 ## 1.2.0
 * Added new getAccountStatus() method to check if the user is logged in
 * Adapted README

@@ -13,6 +13,7 @@ public class SwiftCloudKitPlugin: NSObject, FlutterPlugin {
       let callArguments: Dictionary<String, Any> = call.arguments as! Dictionary<String, Any>
       
       GetValueHandler().handle(command: call.method, arguments: callArguments, result: result)
+      GetAllValueHandler().handle(command: call.method, arguments: callArguments, result: result)
       SaveValueHandler().handle(command: call.method, arguments: callArguments, result: result)
       DeleteValueHandler().handle(command: call.method, arguments: callArguments, result: result)
       DeleteAllHandler().handle(command: call.method, arguments: callArguments, result: result)

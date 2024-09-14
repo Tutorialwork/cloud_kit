@@ -57,6 +57,22 @@ class CloudKit {
     }
   }
 
+  /// Loads all values stored in CloudKit in a Map with key and value both as a string
+  Future<Map<String, String>?> getAll() async {
+    if (!Platform.isIOS) {
+      return null;
+    }
+
+    Map<dynamic, dynamic> records = await (_channel
+        .invokeMethod('GET_ALL_VALUE', {"containerId": _containerId}));
+
+    Map<String, String> stringRecords = records.map((key, value) {
+      return MapEntry(key.toString(), value.toString());
+    });
+
+    return stringRecords;
+  }
+
   /// Delete a entry from CloudKit using the key.
   Future<bool> delete(String key) async {
     if (!Platform.isIOS) {
