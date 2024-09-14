@@ -9,26 +9,44 @@ You can save with the package key value pairs in the private database of the use
 
 # 📝 Usage
 
-Just create a new instance of the CloudKit class with your container id of your created CloudKit container.
-And then you are able, if the user is signed in into his iCloud account, to save key value pairs and delete it.
+Simply create a new instance of the CloudKit class with the container id of the CloudKit container you created.
+And then, if the user is signed in to their iCloud account, you can store and delete key-value pairs.
 
-- Instantiate CloudKit instance to save and get a value.
+First, instantiate a CloudKit instance to use the plugin.
+To do this, you will need to pass your container id, which you will need to create in order to use CloudKit.
+More information about creating a container can be found in the [Setup section](#-setup) of this page.
 
 ```dart
 CloudKit cloudKit = CloudKit('iCloud.dev.tutorialwork.cloudkitExample'); // Enter your container id
-cloudKit.save('key', 'value');
-cloudKit.get('key');
-cloudKit.delete('key');
-cloudKit.clearDatabase();
 ```
 
-- Check if the user is logged in, otherwise the process of saving and getting value can fail.
+Before start using CloudKit you need to check if the user is logged in, otherwise the process of saving and getting value will fail.
 
 ```dart
-CloudKitAccountStatus accountStatus = await cloudKit.getAccountStatus();
+CloudKitAccountStatus accountStatus = await cloudKit.getAccountStatus()
 if (accountStatus == CloudKitAccountStatus.available) {
-  // User is logged in with iCloud
+  // User is logged in to iCloud, you can start using the plugin
 }
+```
+
+Once the instance has been created, you can access it to retrieve, save and delete entries.
+
+```dart
+cloudKit.save('key', 'value'); // both must be strings, if you want to save objects use the JSON format
+cloudKit.get('key'); // returns a string with the value or null if the key was not found or you are not on iOS
+cloudKit.delete('key'); // returns a boolean if it was successful
+```
+
+You can also delete the entire user database with a single command.
+
+```dart
+cloudKit.clearDatabase(); // also returns a boolean if successful
+```
+
+And if you want to check what's in the database, you can also get all entries.
+
+```dart
+cloudKit.getAll(); // return a map with all key-value pairs -> {key: value, secondKey: secondValue}
 ```
 
 # 💻 Setup
